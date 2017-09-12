@@ -29,14 +29,24 @@ module.exports = {
         loader: 'null-loader'
       },
       {
-        test: /\.css$/,
+        test: /\.less$/,
         exclude: helpers.root('src', 'app'),
         loader: 'null-loader'
       },
       {
         test: /\.css$/,
+        exclude: helpers.root('src', 'app'),
+        loader: 'null-loader'
+      },
+      {
+        test: /\.less$/,
         include: helpers.root('src', 'app'),
-        loader: 'raw-loader'
+        loader: 'raw-loader!null-loader'
+      },
+      {
+        test: /\.css$/,
+        include: helpers.root('src', 'app'),
+        loader: 'null-loader'
       }
     ]
   },
@@ -50,4 +60,3 @@ module.exports = {
     )
   ]
 }
-

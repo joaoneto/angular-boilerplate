@@ -4,7 +4,7 @@
   "private": true,
   "description": "Example project from an angular.io guide.",
   "scripts": {
-    "test:once": "karma start karma.conf.js --single-run",
+    "test:once": "karma start karma.webpack.conf.js --single-run",
     "build": "rimraf dist && webpack --config config/webpack.prod.js --bail",
     "serve": "lite-server -c=bs-config.json",
     "prestart": "npm run build",
