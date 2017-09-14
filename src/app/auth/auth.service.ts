@@ -1,37 +1,50 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
+import 'rxjs/add/operator/map';
 
 export interface Credential {
-  username: String,
-  password: String
+  username: String;
+  password: String;
+}
+
+export interface Authorization {
+  user: {
+    _id: String,
+    name: String,
+    username: String,
+    email: String,
+    gender?: String
+  };
+  token: String;
 }
 
 @Injectable()
 export class AuthService {
-  public token: String | null;
+  constructor(private http: Http) {}
 
-  constructor(private http: Http) {
+  setAuthorization(authorization: Authorization): void {
+    localStorage.authorizationData = authorization;
+  }
+
+  getAuthorization(): Authorization {
+    return localStorage.authorizationData as Authorization;
   }
 
   getToken(): String | null {
-    return this.token;
+    return this.getAuthorization().token;
   }
 
-  setToken(token: String): void {
-    this.token = token;
+  isLoggedIn(): Boolean {
+    return !!localStorage.getItem('authorizationData');
   }
 
-  unsetToken(): void {
-    this.token = null;
-  }
-
-  login(credential: Credential): Observable<Object> {
+  login(credential: Credential): Observable<any> {
     return this.http.post('https://my-app.com/api/authenticate', credential)
-      .map(res => res.json())
-      .map(responseData => {
-        this.setToken(responseData.token);
-        return responseData;
+      .map((response: Response) => response.json() as Authorization)
+      .map((authorization: Authorization) => {
+        this.setAuthorization(authorization);
+        return authorization;
       });
   }
 }

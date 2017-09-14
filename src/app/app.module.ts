@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AboutModule } from './about/about.module';
 import { TodoModule } from './todo/todo.module';
+import { LoginModule } from './login/login.module';
 
 import { PageNotFoundComponent } from './not-found.component';
 
@@ -16,6 +17,7 @@ import { PageNotFoundComponent } from './not-found.component';
     BrowserModule,
     AboutModule,
     TodoModule,
+    LoginModule,
     AppRoutingModule
   ],
   declarations: [
