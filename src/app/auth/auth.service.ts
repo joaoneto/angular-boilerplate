@@ -23,15 +23,19 @@ export interface Authorization {
 export class AuthService {
   constructor(private http: Http) {}
 
+  unsetAuthorization(): void {
+    localStorage.authorizationData = null;
+  }
+
   setAuthorization(authorization: Authorization): void {
-    localStorage.authorizationData = authorization;
+    localStorage.setItem('authorizationData', JSON.stringify(authorization));
   }
 
   getAuthorization(): Authorization {
-    return localStorage.authorizationData as Authorization;
+    return JSON.parse(localStorage.getItem('authorizationData')) as Authorization;
   }
 
-  getToken(): String | null {
+  getToken(): String {
     return this.getAuthorization().token;
   }
 
@@ -46,5 +50,9 @@ export class AuthService {
         this.setAuthorization(authorization);
         return authorization;
       });
+  }
+
+  logout(): void {
+    this.unsetAuthorization();
   }
 }

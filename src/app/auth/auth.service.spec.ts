@@ -20,7 +20,7 @@ describe('AuthService', () => {
     this.backend.connections.subscribe((connection: any) => this.lastConnection = connection);
   });
 
-  it('should get authorization token on login', fakeAsync(() => {
+  it('should get authorization on login', fakeAsync(() => {
     const token: String = 'abc-123';
     const mockResponse: Authorization = {
       user: {
@@ -38,7 +38,7 @@ describe('AuthService', () => {
 
     let result: any;
 
-    this.authService.login(credential).subscribe((responseData: any) => result = responseData);
+    this.authService.login(credential).subscribe((responseData: Response) => result = responseData);
 
     this.lastConnection.mockRespond(new Response(new ResponseOptions({
       body: JSON.stringify(mockResponse)
@@ -48,5 +48,38 @@ describe('AuthService', () => {
 
     expect(this.lastConnection.request.url).toMatch(/\/api\/authenticate$/, 'url invalid');
     expect(result.token).toEqual(token);
+  }));
+
+  it('should authorization getToken undefined', fakeAsync(() => {
+    const result = this.authService.getToken();
+    expect(result).toBeUndefined();
+  }));
+
+  it('should authorization getToken', fakeAsync(() => {
+    const token: String = 'abc-123';
+    const mockResponse: Authorization = {
+      user: {
+        _id: 'user-1',
+        name: 'Foo User',
+        username: 'user',
+        email: 'user@email.com'
+      },
+      token
+    };
+    const credential: Credential = {
+      username: 'user',
+      password: '123'
+    };
+
+    this.authService.login(credential);
+
+    this.lastConnection.mockRespond(new Response(new ResponseOptions({
+      body: JSON.stringify(mockResponse)
+    })));
+
+    tick();
+
+    const result = this.authService.getToken();
+    expect(result).toEqual(token);
   }));
 });
